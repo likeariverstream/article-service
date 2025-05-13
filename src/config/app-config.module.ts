@@ -18,6 +18,18 @@ import { z } from 'zod';
             AUTH_REFRESH_TOKEN_KEY: z.string({
               required_error: 'AUTH_REFRESH_TOKEN_KEY not found',
             }),
+            POSTGRES_HOST: z.string({ required_error: 'POSTGRES_HOST' }),
+            POSTGRES_PORT: z.coerce.number({ required_error: 'POSTGRES_PORT' }),
+            POSTGRES_PASSWORD: z.string({
+              required_error: 'POSTGRES_PASSWORD',
+            }),
+            POSTGRES_USERNAME: z.string({
+              required_error: 'POSTGRES_USERNAME',
+            }),
+            POSTGRES_DATABASE: z.string({
+              required_error: 'POSTGRES_DATABASE',
+            }),
+            ADMINER_PORT: z.coerce.number({ required_error: 'ADMINER_PORT' }),
           })
           .parse(env),
     }),
