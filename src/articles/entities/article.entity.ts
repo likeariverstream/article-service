@@ -16,7 +16,7 @@ export class Article {
   uuid: string;
   @Column({ type: 'varchar', length: 255, nullable: false })
   title: string;
-  @Column({ type: 'varchar', length: 1000, nullable: false })
+  @Column({ type: 'varchar', length: 2000, nullable: false })
   description: string;
   @Column({ type: 'varchar', length: 255, nullable: false })
   author: string;
