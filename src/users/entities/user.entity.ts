@@ -6,6 +6,7 @@ type UserRow = {
   name: string;
   email: string;
   hashPassword: string;
+  refreshToken: string;
   createdAt: Date;
   updatedAt: Date;
   isDeleted: boolean;
@@ -33,6 +34,8 @@ export class User {
   email: string;
   @Column({ type: 'varchar', length: 1000, name: 'hash_password' })
   hashPassword: string;
+  @Column({ type: 'varchar', length: 255, name: 'refresh_token' })
+  refreshToken: string;
   @Column({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
   @Column({ type: 'timestamptz', name: 'updated_at' })
@@ -40,23 +43,15 @@ export class User {
   @Column({ type: 'boolean', default: false, name: 'is_deleted' })
   isDeleted: boolean;
 
-  constructor({
-    uuid,
-    surname,
-    name,
-    email,
-    hashPassword,
-    createdAt,
-    updatedAt,
-    isDeleted,
-  }: UserRow) {
-    this.uuid = uuid;
-    this.surname = surname;
-    this.name = name;
-    this.email = email;
-    this.hashPassword = hashPassword;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
-    this.isDeleted = isDeleted;
+  constructor(row: UserRow) {
+    this.uuid = row.uuid;
+    this.surname = row.surname;
+    this.name = row.name;
+    this.email = row.email;
+    this.hashPassword = row.hashPassword;
+    this.refreshToken = row.refreshToken;
+    this.createdAt = row.createdAt;
+    this.updatedAt = row.updatedAt;
+    this.isDeleted = row.isDeleted;
   }
 }

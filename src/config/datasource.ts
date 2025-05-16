@@ -12,9 +12,13 @@ export const configOptions: DataSourceOptions = {
   username: process.env.POSTGRES_USERNAME,
   database: process.env.POSTGRES_DATABASE,
   synchronize: false,
-  logging: false,
+  logging: ['error', 'migration', 'warn'],
   entitySkipConstructor: true,
   migrations: ['dist/migrations/*.js'],
+  logger: 'formatted-console',
+  maxQueryExecutionTime: 60_000_000,
 };
 
-export default new DataSource(configOptions);
+const dataSource = new DataSource(configOptions);
+
+export default dataSource;
