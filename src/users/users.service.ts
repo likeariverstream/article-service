@@ -5,12 +5,14 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { Session } from './interfaces/session';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly usersRepository: UsersRepository,
   ) {}
 
   create(userData: CreateUserDto) {

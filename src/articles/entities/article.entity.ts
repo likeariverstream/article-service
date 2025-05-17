@@ -1,10 +1,11 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from '../../users/entities/user.entity';
 
 type ArticleRow = {
   uuid: string;
   title: string;
   description: string;
-  author: string;
+  author: User;
   publishedAt: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -13,19 +14,24 @@ type ArticleRow = {
 
 export class Article {
   @PrimaryGeneratedColumn('uuid')
-  uuid: string;
+  uuid?: string;
   @Column({ type: 'varchar', length: 255, nullable: false })
   title: string;
   @Column({ type: 'varchar', length: 2000, nullable: false })
   description: string;
-  @Column({ type: 'varchar', length: 255, nullable: false })
-  author: string;
+  @ManyToOne(() => User, (user) => user.uuid)
+  @JoinColumn({
+    name: 'uuid',
+    referencedColumnName: 'uuid',
+    foreignKeyConstraintName: 'fk_article_author_uuid',
+  })
+  author: User;
   @Column({ type: 'timestamptz', nullable: false, name: 'published_at' })
   publishedAt: Date;
   @Column({ type: 'timestamptz', nullable: false, name: 'created_at' })
-  createdAt: Date;
+  createdAt?: Date;
   @Column({ type: 'timestamptz', nullable: true, name: 'updated_at' })
-  updatedAt: Date;
+  updatedAt: Date | null;
   @Column({ type: 'boolean', nullable: false, name: 'is_deleted' })
   isDeleted: boolean;
 
