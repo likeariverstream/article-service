@@ -37,7 +37,7 @@ describe('UsersService', () => {
       password: '12345678',
     };
     const hashPassword = sha256(userData.password);
-    const createdUser = service.create(userData);
+    const createdUser = service.createUser(userData);
 
     expect(createdUser).toStrictEqual({
       name: 'John',
@@ -64,9 +64,8 @@ describe('UsersService', () => {
     const session: Session = {
       name: 'John',
       surname: 'Doe',
-      id: '1',
+      uuid: '1',
       email: 'example@mail.com',
-      role: 'user',
     };
 
     const AUTH_ACCESS_TOKEN_KEY = configService.get<string>(
@@ -92,16 +91,14 @@ describe('UsersService', () => {
       },
     );
 
-    expect(decodedAccessToken.id).toStrictEqual(session.id);
+    expect(decodedAccessToken.uuid).toStrictEqual(session.uuid);
     expect(decodedAccessToken.email).toStrictEqual(session.email);
     expect(decodedAccessToken.name).toStrictEqual(session.name);
     expect(decodedAccessToken.surname).toStrictEqual(session.surname);
-    expect(decodedAccessToken.role).toStrictEqual(session.role);
 
-    expect(decodedRefreshToken.id).toStrictEqual(session.id);
+    expect(decodedRefreshToken.uuid).toStrictEqual(session.uuid);
     expect(decodedRefreshToken.email).toStrictEqual(session.email);
     expect(decodedRefreshToken.name).toStrictEqual(session.name);
     expect(decodedRefreshToken.surname).toStrictEqual(session.surname);
-    expect(decodedRefreshToken.role).toStrictEqual(session.role);
   });
 });

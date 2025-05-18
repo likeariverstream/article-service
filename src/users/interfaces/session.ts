@@ -1,7 +1,6 @@
 export interface Session {
-  id: string;
+  uuid: string;
   email: string;
   name: string;
   surname: string;
-  role: string | null;
 }

@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Article } from './entities/article.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { UpdateArticle } from './interfaces/update-article';
+import { FilterArticles } from './interfaces/filter-articles';
 
 @Injectable()
 export class ArticlesRepository {
@@ -11,7 +13,7 @@ export class ArticlesRepository {
   ) {}
 
   create(article: Article) {
-    return this.repository.create(article);
+    return this.repository.save(article);
   }
 
   findOneByUuid(uuid: string): Promise<Article> {
@@ -20,15 +22,47 @@ export class ArticlesRepository {
     });
   }
 
-  remove(uuid: string) {
-    return this.repository.update({ uuid: uuid }, { isDeleted: true });
+  async removeByUuid(uuid: string) {
+    const { affected } = await this.repository.update(
+      { uuid: uuid },
+      { isDeleted: true },
+    );
+    return { deleted: affected };
   }
 
-  update(updateData: Article) {
-    return this.repository.preload(updateData);
+  async update(updateData: UpdateArticle) {
+    await this.repository.save(updateData);
+
+    return this.repository.findOneByOrFail({ uuid: updateData.uuid });
   }
 
-  getList(offset: number, limit: number): Promise<Article[]> {
-    return this.repository.find({ skip: offset, take: limit });
+  async findManyByFilter(filter: FilterArticles) {
+    const query = this.repository.createQueryBuilder('article');
+    query.where('article.is_deleted = :isDeleted', { isDeleted: false });
+
+    if (filter.author) {
+      query.andWhere('article.author_uuid = :author', {
+        author: filter.author,
+      });
+    }
+
+    if (filter.date) {
+      query.andWhere('DATE(article.published_at) = :date', {
+        date: filter.date,
+      });
+    }
+
+    query.limit(filter.limit);
+    query.offset(filter.offset);
+    const totalCount = await query.getCount();
+    const articles = await query.getMany();
+    return {
+      articles: articles,
+      totalCount: totalCount,
+    };
+  }
+
+  getTotalCount() {
+    return this.repository.count({ where: { isDeleted: false } });
   }
 }

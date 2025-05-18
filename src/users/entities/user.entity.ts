@@ -15,7 +15,7 @@ type UserRow = {
 @Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
-  uuid: string;
+  uuid?: string;
   @Column({
     type: 'varchar',
     length: 255,
@@ -34,12 +34,17 @@ export class User {
   email: string;
   @Column({ type: 'varchar', length: 1000, name: 'hash_password' })
   hashPassword: string;
-  @Column({ type: 'varchar', length: 255, name: 'refresh_token' })
-  refreshToken: string;
+  @Column({
+    type: 'varchar',
+    length: 255,
+    nullable: true,
+    name: 'refresh_token',
+  })
+  refreshToken: string | null;
   @Column({ type: 'timestamptz', name: 'created_at' })
-  createdAt: Date;
-  @Column({ type: 'timestamptz', name: 'updated_at' })
-  updatedAt: Date;
+  createdAt?: Date;
+  @Column({ type: 'timestamptz', nullable: true, name: 'updated_at' })
+  updatedAt: Date | null;
   @Column({ type: 'boolean', default: false, name: 'is_deleted' })
   isDeleted: boolean;
 

@@ -1,17 +1,15 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddRefreshTokenColumn1747383842564 implements MigrationInterface {
+export class SetUniqueEmail1747462065523 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
       `ALTER TABLE IF EXISTS "users"
-          ADD IF NOT EXISTS "refresh_token" VARCHAR(255)`,
+        ADD CONSTRAINT "unique_email" UNIQUE ("email")`,
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      `ALTER TABLE IF EXISTS "users"
-          DROP COLUMN IF EXISTS "refresh_token"`,
-    );
+    await queryRunner.query(`ALTER TABLE IF EXISTS "users"
+      DROP CONSTRAINT IF EXISTS "unique_email"`);
   }
 }

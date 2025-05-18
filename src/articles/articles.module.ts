@@ -4,9 +4,11 @@ import { ArticlesController } from './articles.controller';
 import { Article } from './entities/article.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticlesRepository } from './articles.repository';
+import { JwtModule } from '@nestjs/jwt';
+import { AppConfigModule } from '../config/app-config.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Article])],
+  imports: [TypeOrmModule.forFeature([Article]), JwtModule, AppConfigModule],
   controllers: [ArticlesController],
   providers: [ArticleService, ArticlesRepository],
 })

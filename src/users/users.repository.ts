@@ -14,12 +14,8 @@ export class UsersRepository {
     return await this.repository.save(user);
   }
 
-  async getList(offset: number, limit: number) {
-    return await this.repository.find({ skip: offset, take: limit });
-  }
-
   async findOneByEmail(email: string) {
-    return await this.repository.findOneByOrFail({
+    return await this.repository.findOneBy({
       email,
     });
   }
@@ -32,6 +28,8 @@ export class UsersRepository {
   }
 
   async update(user: User) {
-    return await this.repository.preload(user);
+    await this.repository.update({ uuid: user.uuid }, user);
+
+    return await this.repository.findOneBy({ uuid: user.uuid });
   }
 }

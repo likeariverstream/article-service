@@ -1,17 +1,15 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddRefreshTokenColumn1747383842564 implements MigrationInterface {
+export class ChangeAuthorColumnName1747493239164 implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE IF EXISTS "users"
-          ADD IF NOT EXISTS "refresh_token" VARCHAR(255)`,
+      `ALTER TABLE "articles" RENAME COLUMN "author" TO "author_uuid"`,
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `ALTER TABLE IF EXISTS "users"
-          DROP COLUMN IF EXISTS "refresh_token"`,
+      `ALTER TABLE "articles" RENAME COLUMN "author_uuid" TO "author"`,
     );
   }
 }

@@ -6,6 +6,7 @@ import { Session } from './interfaces/session';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { UsersRepository } from './users.repository';
+import { User } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -15,18 +16,27 @@ export class UsersService {
     private readonly usersRepository: UsersRepository,
   ) {}
 
-  create(userData: CreateUserDto) {
+  createUser(userData: CreateUserDto) {
     const { name, surname, email, password } = userData;
     const hashPassword = sha256(password);
-
-    return { name, surname, email, hashPassword };
+    return this.usersRepository.create({
+      name: name,
+      surname: surname,
+      email: email,
+      hashPassword: hashPassword,
+      refreshToken: null,
+      updatedAt: null,
+      isDeleted: false,
+    });
   }
 
-  checkByEmailAndPassword(userData: LoginUserDto) {
+  async checkByEmailAndPassword(userData: LoginUserDto) {
     const { email, password } = userData;
     const hashPassword = sha256(password);
-
-    return { email, hashPassword };
+    return await this.usersRepository.findOneByEmailAndPassword(
+      email,
+      hashPassword,
+    );
   }
 
   getTokenPair(session: Session) {
@@ -47,5 +57,13 @@ export class UsersService {
     });
 
     return { accessToken, refreshToken };
+  }
+
+  async updateUser(user: User) {
+    return await this.usersRepository.update(user);
+  }
+
+  async checkByEmail(email: string) {
+    return await this.usersRepository.findOneByEmail(email);
   }
 }
