@@ -5,15 +5,13 @@ import { Article } from './entities/article.entity';
 import { UpdateArticle } from './interfaces/update-article';
 import { FilterArticles } from './interfaces/filter-articles';
 import { CacheService } from '../cache/cache.service';
-import { GetArticles } from './interfaces/get-articles';
 
 @Injectable()
 export class ArticleService {
   constructor(
     private readonly articleRepository: ArticlesRepository,
     private readonly cacheService: CacheService,
-  ) {
-  }
+  ) {}
 
   createArticle(article: CreateArticle) {
     const articleData: Article = {

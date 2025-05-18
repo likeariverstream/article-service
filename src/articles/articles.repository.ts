@@ -10,8 +10,7 @@ export class ArticlesRepository {
   constructor(
     @InjectRepository(Article)
     private readonly repository: Repository<Article>,
-  ) {
-  }
+  ) {}
 
   create(article: Article) {
     return this.repository.save(article);
