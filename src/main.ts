@@ -1,9 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import { ZodValidationPipe } from '@anatine/zod-nestjs';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  await app.listen(process.env.APP_PORT ?? 4000);
+  const configService = app.get(ConfigService);
+  const port = configService.get<string>('APP_PORT');
+
+  app.enableShutdownHooks();
+  app.useGlobalPipes(new ZodValidationPipe());
+
+  await app.listen(port ?? 3000);
 }
 
 bootstrap().catch((err) => console.log(err));
