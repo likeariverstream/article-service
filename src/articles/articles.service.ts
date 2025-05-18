@@ -4,10 +4,16 @@ import { CreateArticle } from './interfaces/create-article';
 import { Article } from './entities/article.entity';
 import { UpdateArticle } from './interfaces/update-article';
 import { FilterArticles } from './interfaces/filter-articles';
+import { CacheService } from '../cache/cache.service';
+import { GetArticles } from './interfaces/get-articles';
 
 @Injectable()
 export class ArticleService {
-  constructor(private readonly articleRepository: ArticlesRepository) {}
+  constructor(
+    private readonly articleRepository: ArticlesRepository,
+    private readonly cacheService: CacheService,
+  ) {
+  }
 
   createArticle(article: CreateArticle) {
     const articleData: Article = {
@@ -22,21 +28,31 @@ export class ArticleService {
     return this.articleRepository.create(articleData);
   }
 
-  updateArticle(article: UpdateArticle) {
+  async updateArticle(article: UpdateArticle) {
+    await this.cacheService.delete(article.uuid);
     return this.articleRepository.update({ ...article, updatedAt: new Date() });
   }
 
-  getArticleByUuid(uuid: string) {
-    return this.articleRepository.findOneByUuid(uuid);
+  async getArticleByUuid(uuid: string) {
+    let article = await this.cacheService.get(uuid);
+
+    if (!article) {
+      article = await this.articleRepository.findOneByUuid(uuid);
+      await this.cacheService.set(uuid, article);
+    }
+
+    return article;
   }
 
-  deleteArticle(articleUuid: string) {
+  async deleteArticle(articleUuid: string) {
+    await this.cacheService.delete(articleUuid);
     return this.articleRepository.removeByUuid(articleUuid);
   }
 
   async getArticlesByFilter(filter: FilterArticles) {
-    const { articles, totalCount } =
+    const { articles, totalPages } =
       await this.articleRepository.findManyByFilter(filter);
-    return { articles: articles, total: totalCount };
+
+    return { articles: articles, pages: totalPages };
   }
 }

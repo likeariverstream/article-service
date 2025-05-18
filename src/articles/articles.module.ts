@@ -6,9 +6,15 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticlesRepository } from './articles.repository';
 import { JwtModule } from '@nestjs/jwt';
 import { AppConfigModule } from '../config/app-config.module';
+import { CacheModule } from '../cache/cache.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Article]), JwtModule, AppConfigModule],
+  imports: [
+    TypeOrmModule.forFeature([Article]),
+    JwtModule,
+    AppConfigModule,
+    CacheModule,
+  ],
   controllers: [ArticlesController],
   providers: [ArticleService, ArticlesRepository],
 })

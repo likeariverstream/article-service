@@ -10,7 +10,8 @@ export class ArticlesRepository {
   constructor(
     @InjectRepository(Article)
     private readonly repository: Repository<Article>,
-  ) {}
+  ) {
+  }
 
   create(article: Article) {
     return this.repository.save(article);
@@ -53,16 +54,12 @@ export class ArticlesRepository {
     }
 
     query.limit(filter.limit);
-    query.offset(filter.offset);
+    query.offset((filter.page - 1) * filter.limit);
     const totalCount = await query.getCount();
     const articles = await query.getMany();
     return {
       articles: articles,
-      totalCount: totalCount,
+      totalPages: Math.ceil(totalCount / filter.limit),
     };
-  }
-
-  getTotalCount() {
-    return this.repository.count({ where: { isDeleted: false } });
   }
 }

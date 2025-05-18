@@ -58,9 +58,9 @@ export class ArticlesController {
 
   @Get()
   getList(@Query() query: GetListQueryDto) {
-    const { offset = 0, limit = 20, author, date } = query;
+    const { page = 1, limit = 20, author, date } = query;
     const filter = {
-      offset,
+      page,
       limit,
       author,
       date,

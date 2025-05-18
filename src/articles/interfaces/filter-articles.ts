@@ -1,6 +1,6 @@
 export interface FilterArticles {
+  page: number;
   limit: number;
-  offset: number;
   author: string;
   date: Date;
 }

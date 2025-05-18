@@ -30,6 +30,21 @@ import { z } from 'zod';
               required_error: 'POSTGRES_DATABASE',
             }),
             ADMINER_PORT: z.coerce.number({ required_error: 'ADMINER_PORT' }),
+            REDIS_PASSWORD: z.string({
+              required_error: 'REDIS_PASSWORD not found',
+            }),
+            REDIS_PORT: z.coerce.number({
+              required_error: 'REDIS_PORT not found',
+            }),
+            REDIS_HOST: z.string({
+              required_error: 'REDIS_HOST not found',
+            }),
+            REDIS_USERNAME: z.string({
+              required_error: 'REDIS_USERNAME not found',
+            }),
+            REDIS_TTL: z.string({
+              required_error: 'REDIS_TTL not found',
+            }),
           })
           .parse(env),
     }),
