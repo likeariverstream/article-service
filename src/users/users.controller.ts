@@ -2,20 +2,24 @@ import {
   BadRequestException,
   Body,
   Controller,
+  HttpStatus,
   NotFoundException,
   Post,
-  UnprocessableEntityException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { LoginUserDto } from './dto/login-user.dto';
+import { CreateUserReqDto, CreateUserResDto } from './dto/create-user.dto';
+import { LoginUserReqDto, LoginUserResDto } from './dto/login-user.dto';
+import { ApiResponse } from '@nestjs/swagger';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @ApiResponse({ type: CreateUserResDto, status: HttpStatus.CREATED })
   @Post('register')
-  async register(@Body() createUserData: CreateUserDto) {
+  async register(
+    @Body() createUserData: CreateUserReqDto,
+  ): Promise<CreateUserResDto> {
     const existingUser = await this.usersService.checkByEmail(
       createUserData.email,
     );
@@ -23,35 +27,17 @@ export class UsersController {
       throw new BadRequestException('User already exists');
     }
 
-    const user = await this.usersService.createUser(createUserData);
-
-    if (!user.uuid) {
-      throw new UnprocessableEntityException('user uuid not found');
-    }
-
-    const { accessToken, refreshToken } = this.usersService.getTokenPair({
-      email: user.email,
-      uuid: user.uuid,
-      name: user.name,
-      surname: user.surname,
-    });
-
-    const updatedUser = await this.usersService.updateUser({
-      ...user,
-      refreshToken: refreshToken,
-    });
-
-    return {
-      accessToken: accessToken,
-      refreshToken: updatedUser?.refreshToken,
-    };
+    return this.usersService.createUser(createUserData);
   }
 
+  @ApiResponse({ type: LoginUserResDto, status: HttpStatus.CREATED })
   @Post('login')
-  async login(@Body() loginUserData: LoginUserDto) {
+  async login(
+    @Body() loginUserData: LoginUserReqDto,
+  ): Promise<LoginUserResDto> {
     const user = await this.usersService.checkByEmailAndPassword(loginUserData);
-    if (!user.uuid) {
-      throw new NotFoundException('non-existent email or password');
+    if (!user?.uuid) {
+      throw new NotFoundException('Non-existent email or password');
     }
 
     const { accessToken, refreshToken } = this.usersService.getTokenPair({
@@ -65,6 +51,10 @@ export class UsersController {
       ...user,
       refreshToken: refreshToken,
     });
+
+    if (!updatedUser?.refreshToken) {
+      throw new NotFoundException('Refresh token not found');
+    }
 
     return {
       accessToken: accessToken,

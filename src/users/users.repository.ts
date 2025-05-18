@@ -10,24 +10,31 @@ export class UsersRepository {
     private readonly repository: Repository<User>,
   ) {}
 
-  async create(user: User) {
+  async create(user: User): Promise<User> {
     return await this.repository.save(user);
   }
 
-  async findOneByEmail(email: string) {
+  async findOneByUuid(uuid: string): Promise<User | null> {
+    return this.repository.findOneBy({ uuid: uuid });
+  }
+
+  async findOneByEmail(email: string): Promise<User | null> {
     return await this.repository.findOneBy({
       email,
     });
   }
 
-  findOneByEmailAndPassword(email: string, hashPassword: string) {
-    return this.repository.findOneByOrFail({
+  findOneByEmailAndPassword(
+    email: string,
+    hashPassword: string,
+  ): Promise<User | null> {
+    return this.repository.findOneBy({
       email: email,
       hashPassword: hashPassword,
     });
   }
 
-  async update(user: User) {
+  async update(user: User): Promise<User | null> {
     await this.repository.update({ uuid: user.uuid }, user);
 
     return await this.repository.findOneBy({ uuid: user.uuid });

@@ -6,3 +6,8 @@ interface TokenTime {
 }
 
 export interface TokenPayload extends TokenTime, Session {}
+
+export interface TokenPair {
+  accessToken: string;
+  refreshToken: string;
+}

@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserReqDto } from './dto/create-user.dto';
 import { sha256 } from '../helpers/sha-256';
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { LoginUserDto } from './dto/login-user.dto';
 import { Session } from './interfaces/session';
 import { AppConfigModule } from '../config/app-config.module';
 import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from './interfaces/token';
+import { LoginUserReqDto } from './dto/login-user.dto';
 
 describe('UsersService', () => {
   let service: UsersService;
@@ -30,7 +30,7 @@ describe('UsersService', () => {
   });
 
   it('should be create user', () => {
-    const userData: CreateUserDto = {
+    const userData: CreateUserReqDto = {
       name: 'John',
       surname: 'Doe',
       email: 'example@mail.com',
@@ -48,7 +48,7 @@ describe('UsersService', () => {
   });
 
   it('should be return email and hash', () => {
-    const loginData: LoginUserDto = {
+    const loginData: LoginUserReqDto = {
       email: 'example@mail.com',
       password: '12345678',
     };

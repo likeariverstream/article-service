@@ -2,14 +2,11 @@ import { extendApi } from '@anatine/zod-openapi';
 import { z } from 'zod';
 import { createZodDto } from '@anatine/zod-nestjs';
 
-const createArticleReqZ = extendApi(
-  z.object({
-    title: z.string().min(2).max(255),
-    description: z.string().min(2).max(2000),
-  }),
+const getArticleParamsZ = extendApi(
+  z.object({ articleUuid: z.string().uuid() }),
 );
 
-const createArticleResZ = extendApi(
+const getArticleResDto = extendApi(
   z.object({
     uuid: z.string().uuid(),
     authorUuid: z.string().uuid(),
@@ -20,5 +17,5 @@ const createArticleResZ = extendApi(
   }),
 );
 
-export class CreateArticleReqDto extends createZodDto(createArticleReqZ) {}
-export class CreateArticleResDto extends createZodDto(createArticleResZ) {}
+export class GetArticleParamsDto extends createZodDto(getArticleParamsZ) {}
+export class GetArticleResDto extends createZodDto(getArticleResDto) {}

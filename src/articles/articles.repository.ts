@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Article } from './entities/article.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateArticle } from './interfaces/update-article';
-import { FilterArticles } from './interfaces/filter-articles';
+import { UpdateArticleParams } from './interfaces/update-article';
+import { ArticleFilter, ArticleList } from './interfaces/article';
 
 @Injectable()
 export class ArticlesRepository {
@@ -12,31 +12,27 @@ export class ArticlesRepository {
     private readonly repository: Repository<Article>,
   ) {}
 
-  create(article: Article) {
+  async create(article: Article): Promise<Article> {
     return this.repository.save(article);
   }
 
-  findOneByUuid(uuid: string): Promise<Article> {
-    return this.repository.findOneByOrFail({
+  async findOneByUuid(uuid: string): Promise<Article | null> {
+    return this.repository.findOneBy({
       uuid: uuid,
     });
   }
 
   async removeByUuid(uuid: string) {
-    const { affected } = await this.repository.update(
-      { uuid: uuid },
-      { isDeleted: true },
-    );
-    return { deleted: affected };
+    return this.repository.update({ uuid: uuid }, { isDeleted: true });
   }
 
-  async update(updateData: UpdateArticle) {
+  async update(updateData: UpdateArticleParams): Promise<Article | null> {
     await this.repository.save(updateData);
 
-    return this.repository.findOneByOrFail({ uuid: updateData.uuid });
+    return this.repository.findOneBy({ uuid: updateData.uuid });
   }
 
-  async findManyByFilter(filter: FilterArticles) {
+  async findManyByFilter(filter: ArticleFilter): Promise<ArticleList> {
     const query = this.repository.createQueryBuilder('article');
     query.where('article.is_deleted = :isDeleted', { isDeleted: false });
 
@@ -51,14 +47,21 @@ export class ArticlesRepository {
         date: filter.date,
       });
     }
-
+    query.select([
+      'article.uuid',
+      'article.authorUuid',
+      'article.title',
+      'article.description',
+      'article.publishedAt',
+      'article.updatedAt',
+    ]);
     query.limit(filter.limit);
     query.offset((filter.page - 1) * filter.limit);
     const totalCount = await query.getCount();
     const articles = await query.getMany();
     return {
       articles: articles,
-      totalPages: Math.ceil(totalCount / filter.limit),
+      pages: Math.ceil(totalCount / filter.limit),
     };
   }
 }

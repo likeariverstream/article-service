@@ -9,6 +9,9 @@ import { z } from 'zod';
         z
           .object({
             APP_PORT: z.coerce.number({ required_error: 'APP_PORT not found' }),
+            NODE_ENV: z.enum(['development', 'production'], {
+              required_error: 'NODE_ENV not found',
+            }),
             AUTH_PASSWORD_KEY: z.string({
               required_error: 'AUTH_PASSWORD_KEY not found',
             }),
