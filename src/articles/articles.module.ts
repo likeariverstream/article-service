@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ArticleService } from './articles.service';
+import { ArticlesService } from './articles.service';
 import { ArticlesController } from './articles.controller';
 import { Article } from './entities/article.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -16,6 +16,6 @@ import { CacheModule } from '../cache/cache.module';
     CacheModule,
   ],
   controllers: [ArticlesController],
-  providers: [ArticleService, ArticlesRepository],
+  providers: [ArticlesService, ArticlesRepository],
 })
 export class ArticlesModule {}

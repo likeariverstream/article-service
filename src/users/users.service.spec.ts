@@ -8,28 +8,45 @@ import { AppConfigModule } from '../config/app-config.module';
 import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from './interfaces/token';
 import { LoginUserReqDto } from './dto/login-user.dto';
+import { UsersRepository } from './users.repository';
+import { randomUUID } from 'node:crypto';
+import { User } from './entities/user.entity';
 
 describe('UsersService', () => {
   let service: UsersService;
   let jwtService: JwtService;
   let configService: ConfigService;
+  let usersRepository: UsersRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [JwtModule, AppConfigModule],
-      providers: [UsersService],
+      providers: [
+        UsersService,
+        {
+          provide: UsersRepository,
+          useValue: {
+            create: jest.fn(),
+            findOneByUuid: jest.fn(),
+            findOneByEmail: jest.fn(),
+            findOneByEmailAndPassword: jest.fn(),
+            update: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     service = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
     configService = module.get(ConfigService);
+    usersRepository = module.get(UsersRepository);
   });
 
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
 
-  it('should be create user', () => {
+  it('should be create user', async () => {
     const userData: CreateUserReqDto = {
       name: 'John',
       surname: 'Doe',
@@ -37,27 +54,72 @@ describe('UsersService', () => {
       password: '12345678',
     };
     const hashPassword = sha256(userData.password);
-    const createdUser = service.createUser(userData);
-
-    expect(createdUser).toStrictEqual({
+    const userUuid = randomUUID();
+    const createdAt = new Date().toISOString();
+    const createdUserData: User = {
+      uuid: userUuid,
       name: 'John',
       surname: 'Doe',
-      email: 'example@mail.com',
+      email: 'example@mail.com.ru',
       hashPassword: hashPassword,
+      refreshToken: null,
+      updatedAt: null,
+      isDeleted: false,
+    };
+
+    const mockUser: User = {
+      uuid: userUuid,
+      name: 'John',
+      surname: 'Doe',
+      email: 'example@mail.com.ru',
+      hashPassword: hashPassword,
+      updatedAt: null,
+      isDeleted: false,
+      refreshToken: 'refreshToken',
+      createdAt: createdAt,
+    };
+
+    jest.spyOn(usersRepository, 'create').mockResolvedValue(createdUserData);
+    jest.spyOn(usersRepository, 'findOneByUuid').mockResolvedValue(mockUser);
+    const createdUser = await service.createUser(userData);
+
+    expect(createdUser).toStrictEqual({
+      uuid: userUuid,
+      name: 'John',
+      surname: 'Doe',
+      email: 'example@mail.com.ru',
+      updatedAt: null,
+      createdAt: createdAt,
     });
   });
 
-  it('should be return email and hash', () => {
+  it('should be return user', async () => {
     const loginData: LoginUserReqDto = {
-      email: 'example@mail.com',
+      email: 'example@mail.com.ru',
       password: '12345678',
     };
-    const expected = service.checkByEmailAndPassword(loginData);
+    const hashPassword = sha256(loginData.password);
+    const userUuid = randomUUID();
+    const createdAt = new Date().toISOString();
+    const mockUser: User = {
+      uuid: userUuid,
+      name: 'John',
+      surname: 'Doe',
+      email: 'example@mail.com.ru',
+      hashPassword: hashPassword,
+      updatedAt: null,
+      isDeleted: false,
+      refreshToken: 'refreshToken',
+      createdAt: createdAt,
+    };
 
-    expect(expected).toStrictEqual({
-      email: loginData.email,
-      hashPassword: sha256(loginData.password),
-    });
+    jest
+      .spyOn(usersRepository, 'findOneByEmailAndPassword')
+      .mockResolvedValue(mockUser);
+
+    const expected = await service.checkByEmailAndPassword(loginData);
+
+    expect(expected).toStrictEqual(mockUser);
   });
 
   it('should be corrected fields decode', () => {

@@ -1,8 +1,8 @@
 export interface ArticleFilter {
   page: number;
   limit: number;
-  author: string;
-  date: string;
+  author?: string;
+  date?: string;
 }
 
 export interface ArticleData {
@@ -10,8 +10,8 @@ export interface ArticleData {
   title: string;
   description: string;
   authorUuid: string;
-  publishedAt: string | Date;
-  updatedAt: string | Date | null;
+  publishedAt: string;
+  updatedAt: string | null;
 }
 
 export interface ArticleList {

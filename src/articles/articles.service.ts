@@ -13,7 +13,7 @@ import { ArticleData, ArticleFilter, ArticleList } from './interfaces/article';
 import { CacheService } from '../cache/cache.service';
 
 @Injectable()
-export class ArticleService {
+export class ArticlesService {
   constructor(
     private readonly articleRepository: ArticlesRepository,
     private readonly cacheService: CacheService,
@@ -24,7 +24,7 @@ export class ArticleService {
       authorUuid: article.authorUuid,
       title: article.title,
       description: article.description,
-      publishedAt: new Date(),
+      publishedAt: new Date().toISOString(),
       updatedAt: null,
       isDeleted: false,
     };
@@ -49,7 +49,7 @@ export class ArticleService {
 
     const updatedArticle = await this.articleRepository.update({
       ...article,
-      updatedAt: new Date(),
+      updatedAt: new Date().toISOString(),
     });
 
     if (!updatedArticle) {
@@ -71,11 +71,19 @@ export class ArticleService {
     let article = await this.cacheService.get<ArticleData | null>(uuid);
 
     if (!article) {
-      article = await this.articleRepository.findOneByUuid(uuid);
-      if (!article) {
+      const foundArticle = await this.articleRepository.findOneByUuid(uuid);
+      if (!foundArticle) {
         throw new NotFoundException('Article not found');
       }
-      await this.cacheService.set(uuid, article);
+      article = {
+        uuid: foundArticle.uuid,
+        title: foundArticle.title,
+        description: foundArticle.description,
+        authorUuid: foundArticle.authorUuid,
+        publishedAt: foundArticle.publishedAt,
+        updatedAt: foundArticle.updatedAt,
+      };
+      await this.cacheService.set<ArticleData>(uuid, article);
     }
 
     return article;

@@ -13,9 +13,9 @@ type ArticleRow = {
   description: string;
   author: User;
   authorUuid: string;
-  publishedAt: Date;
-  createdAt: Date;
-  updatedAt: Date | null;
+  publishedAt: string;
+  createdAt: string;
+  updatedAt: string | null;
   isDeleted: boolean;
 };
 
@@ -37,11 +37,11 @@ export class Article {
   })
   author?: User;
   @Column({ type: 'timestamptz', nullable: false, name: 'published_at' })
-  publishedAt: Date;
+  publishedAt: string;
   @Column({ type: 'timestamptz', nullable: false, name: 'created_at' })
-  createdAt?: Date;
+  createdAt?: string;
   @Column({ type: 'timestamptz', nullable: true, name: 'updated_at' })
-  updatedAt: Date | null;
+  updatedAt: string | null;
   @Column({ type: 'boolean', nullable: false, name: 'is_deleted' })
   isDeleted: boolean;
 

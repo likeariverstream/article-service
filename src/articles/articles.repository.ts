@@ -19,6 +19,7 @@ export class ArticlesRepository {
   async findOneByUuid(uuid: string): Promise<Article | null> {
     return this.repository.findOneBy({
       uuid: uuid,
+      isDeleted: false,
     });
   }
 

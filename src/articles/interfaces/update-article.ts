@@ -2,7 +2,7 @@ export interface UpdateArticleParams {
   uuid: string;
   title?: string;
   description?: string;
-  updatedAt?: Date;
+  updatedAt?: string;
 }
 
 export interface UpdatedArticle {
@@ -10,6 +10,6 @@ export interface UpdatedArticle {
   title: string;
   description: string;
   authorUuid: string;
-  publishedAt: string | Date;
-  updatedAt: string | Date | null;
+  publishedAt: string;
+  updatedAt: string | null;
 }

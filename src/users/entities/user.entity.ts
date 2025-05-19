@@ -7,8 +7,8 @@ type UserRow = {
   email: string;
   hashPassword: string;
   refreshToken: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string | null;
   isDeleted: boolean;
 };
 
@@ -42,9 +42,9 @@ export class User {
   })
   refreshToken: string | null;
   @Column({ type: 'timestamptz', name: 'created_at' })
-  createdAt?: Date;
+  createdAt?: string;
   @Column({ type: 'timestamptz', nullable: true, name: 'updated_at' })
-  updatedAt: Date | null;
+  updatedAt: string | null;
   @Column({ type: 'boolean', default: false, name: 'is_deleted' })
   isDeleted: boolean;
 

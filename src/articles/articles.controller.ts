@@ -10,7 +10,7 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ArticleService } from './articles.service';
+import { ArticlesService } from './articles.service';
 import { AuthGuard } from '../guards/auth.guard';
 import {
   CreateArticleResDto,
@@ -42,7 +42,7 @@ import {
 @ApiTags('Articles')
 @Controller('articles')
 export class ArticlesController {
-  constructor(private readonly articleService: ArticleService) {}
+  constructor(private readonly articlesService: ArticlesService) {}
 
   @ApiBearerAuth()
   @ApiResponse({ type: CreateArticleResDto, status: HttpStatus.CREATED })
@@ -52,7 +52,7 @@ export class ArticlesController {
     @Body() article: CreateArticleReqDto,
     @AuthUser() user: Session,
   ) {
-    return this.articleService.createArticle({
+    return this.articlesService.createArticle({
       ...article,
       authorUuid: user.uuid,
     });
@@ -67,7 +67,10 @@ export class ArticlesController {
     @Body() article: UpdateArticleReqDto,
   ) {
     const { articleUuid } = params;
-    return this.articleService.updateArticle({ ...article, uuid: articleUuid });
+    return this.articlesService.updateArticle({
+      ...article,
+      uuid: articleUuid,
+    });
   }
 
   @ApiBearerAuth()
@@ -78,14 +81,14 @@ export class ArticlesController {
     @Param() params: DeleteArticleParamsDto,
   ): Promise<DeleteArticleResDto> {
     const { articleUuid } = params;
-    return this.articleService.deleteArticle(articleUuid);
+    return this.articlesService.deleteArticle(articleUuid);
   }
 
   @ApiOkResponse({ type: GetArticleResDto })
   @Get(':articleUuid')
   getArticle(@Param() params: GetArticleParamsDto) {
     const { articleUuid } = params;
-    return this.articleService.getArticleByUuid(articleUuid);
+    return this.articlesService.getArticleByUuid(articleUuid);
   }
 
   @ApiOkResponse({ type: GetArticleListResDto })
@@ -98,6 +101,6 @@ export class ArticlesController {
       author,
       date,
     };
-    return this.articleService.getArticlesByFilter(filter);
+    return this.articlesService.getArticlesByFilter(filter);
   }
 }
