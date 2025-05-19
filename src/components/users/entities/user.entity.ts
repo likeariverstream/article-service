@@ -47,7 +47,7 @@ export class User {
   updatedAt: string | null;
   @Column({ type: 'boolean', default: false, name: 'is_deleted' })
   isDeleted: boolean;
-
+  /* Required for strict mode in tsconfig.json */
   constructor(row: UserRow) {
     this.uuid = row.uuid;
     this.surname = row.surname;

@@ -44,7 +44,7 @@ export class Article {
   updatedAt: string | null;
   @Column({ type: 'boolean', nullable: false, name: 'is_deleted' })
   isDeleted: boolean;
-
+  /* Required for strict mode in tsconfig.json */
   constructor(row: ArticleRow) {
     this.uuid = row.uuid;
     this.title = row.title;

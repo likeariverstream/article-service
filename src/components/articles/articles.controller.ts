@@ -11,13 +11,13 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ArticlesService } from './articles.service';
-import { AuthGuard } from '../guards/auth.guard';
+import { AuthGuard } from '../../guards/auth.guard';
 import {
   CreateArticleResDto,
   CreateArticleReqDto,
 } from './dto/create-article.dto';
 import { Session } from '../users/interfaces/session';
-import { AuthUser } from '../decorators/auth-user';
+import { AuthUser } from '../../decorators/auth-user';
 import {
   UpdateArticleParamsDto,
   UpdateArticleReqDto,

@@ -4,10 +4,10 @@ import { createZodDto } from '@anatine/zod-nestjs';
 
 const getArticleListQueryZ = extendApi(
   z.object({
-    limit: z.coerce.number().gte(1).max(100),
-    page: z.coerce.number().gte(1),
-    author: z.string().uuid(),
-    date: extendApi(z.string(), { example: '2025-05-31' }),
+    limit: z.coerce.number().gte(1).max(100).optional(),
+    page: z.coerce.number().gte(1).optional(),
+    author: z.string().uuid().optional(),
+    date: extendApi(z.string(), { example: '2025-05-31' }).optional(),
   }),
 );
 
@@ -23,7 +23,7 @@ const getArticleListResDto = extendApi(
         updatedAt: z.date().nullable(),
       }),
     ),
-    pages: z.number(),
+    pages: extendApi(z.number(), { description: 'Number of available pages' }),
   }),
 );
 

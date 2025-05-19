@@ -57,12 +57,19 @@ export class ArticlesRepository {
       'article.updatedAt',
     ]);
     query.limit(filter.limit);
-    query.offset((filter.page - 1) * filter.limit);
+
+    /*Offset value*/
+    const offset = (filter.page - 1) * filter.limit;
+
+    query.offset(offset);
     const totalCount = await query.getCount();
     const articles = await query.getMany();
+
+    /*Number of available pages*/
+    const pagesCount = Math.ceil(totalCount / filter.limit);
     return {
       articles: articles,
-      pages: Math.ceil(totalCount / filter.limit),
+      pages: pagesCount,
     };
   }
 }

@@ -4,7 +4,7 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { CreateUserReqDto } from './dto/create-user.dto';
-import { sha256 } from '../helpers/sha-256';
+import { sha256 } from '../../helpers/sha-256';
 import { LoginUserReqDto } from './dto/login-user.dto';
 import { Session } from './interfaces/session';
 import { JwtService } from '@nestjs/jwt';

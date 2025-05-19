@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { Session } from '../users/interfaces/session';
+import { Session } from '../components/users/interfaces/session';
 
 interface DecodedToken extends Session {
   iat: number;

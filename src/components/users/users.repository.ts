@@ -15,12 +15,13 @@ export class UsersRepository {
   }
 
   async findOneByUuid(uuid: string): Promise<User | null> {
-    return this.repository.findOneBy({ uuid: uuid });
+    return this.repository.findOneBy({ uuid: uuid, isDeleted: false });
   }
 
   async findOneByEmail(email: string): Promise<User | null> {
     return await this.repository.findOneBy({
       email,
+      isDeleted: false,
     });
   }
 
@@ -31,6 +32,7 @@ export class UsersRepository {
     return this.repository.findOneBy({
       email: email,
       hashPassword: hashPassword,
+      isDeleted: false,
     });
   }
 

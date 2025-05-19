@@ -10,7 +10,7 @@ import {
   UpdatedArticle,
 } from './interfaces/update-article';
 import { ArticleData, ArticleFilter, ArticleList } from './interfaces/article';
-import { CacheService } from '../cache/cache.service';
+import { CacheService } from '../../cache/cache.service';
 
 @Injectable()
 export class ArticlesService {
@@ -39,6 +39,7 @@ export class ArticlesService {
     };
   }
 
+  /*Partial update*/
   async updateArticle(article: UpdateArticleParams): Promise<UpdatedArticle> {
     const foundArticle = await this.articleRepository.findOneByUuid(
       article.uuid,

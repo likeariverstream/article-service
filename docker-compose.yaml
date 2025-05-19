@@ -1,5 +1,22 @@
 services:
+  articles_service:
+    container_name: articles_service
+    restart: always
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile
 
+    image: articles_service:latest
+    depends_on:
+      - postgres
+      - redis
+    ports:
+      - "${APP_PORT}:4000"
+#    command: sh ./app/init.sh
+#    command: node dist/src/main.js
+    command: sh init.sh
   postgres:
     image: postgres
     restart: always

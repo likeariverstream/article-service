@@ -5,8 +5,8 @@ import { Article } from './entities/article.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ArticlesRepository } from './articles.repository';
 import { JwtModule } from '@nestjs/jwt';
-import { AppConfigModule } from '../config/app-config.module';
-import { CacheModule } from '../cache/cache.module';
+import { AppConfigModule } from '../../config/app-config.module';
+import { CacheModule } from '../../cache/cache.module';
 
 @Module({
   imports: [

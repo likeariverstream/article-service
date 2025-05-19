@@ -1,9 +1,9 @@
 import { ArticlesService } from './articles.service';
 import { JwtModule } from '@nestjs/jwt';
-import { CacheService } from '../cache/cache.service';
+import { CacheService } from '../../cache/cache.service';
 import { ArticlesRepository } from './articles.repository';
-import { AppConfigModule } from '../config/app-config.module';
-import { CacheModule } from '../cache/cache.module';
+import { AppConfigModule } from '../../config/app-config.module';
+import { CacheModule } from '../../cache/cache.module';
 import { Test, TestingModule } from '@nestjs/testing';
 import { randomUUID } from 'node:crypto';
 import { Article } from './entities/article.entity';

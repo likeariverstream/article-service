@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from './users.service';
 import { CreateUserReqDto } from './dto/create-user.dto';
-import { sha256 } from '../helpers/sha-256';
+import { sha256 } from '../../helpers/sha-256';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { Session } from './interfaces/session';
-import { AppConfigModule } from '../config/app-config.module';
+import { AppConfigModule } from '../../config/app-config.module';
 import { ConfigService } from '@nestjs/config';
 import { TokenPayload } from './interfaces/token';
 import { LoginUserReqDto } from './dto/login-user.dto';

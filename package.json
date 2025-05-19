@@ -18,12 +18,9 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm:prod": "npx typeorm-ts-node-esm",
-    "typeorm:dev": "ts-node ./node_modules/typeorm/cli",
-    "migration:run:dev": "npm run typeorm:dev migration:run -- -d src/config/datasource.ts",
-    "migration:revert:dev": "npm run typeorm:dev migration:revert -- -d src/config/datasource.ts",
-    "migration:run:prod": "npm run typeorm:prod migration:run -- -d dist/src/config/datasource.js",
-    "migration:revert:prod": "npm run typeorm:prod migration:revert -- -d dist/src/config/datasource.js"
+    "typeorm": "npx typeorm-ts-node-esm",
+    "migration:run": "npm run typeorm migration:run -- -d dist/src/config/datasource.js",
+    "migration:revert": "npm run typeorm migration:revert -- -d dist/src/config/datasource.js"
   },
   "dependencies": {
     "@anatine/zod-nestjs": "^2.0.12",
